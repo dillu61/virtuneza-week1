@@ -29,9 +29,10 @@ public class mood extends AppCompatActivity {
         super.onCreate(savedInstanceState); 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_mood);
-
+        clearall c=new clearall();
         SharedPreferences sp = getSharedPreferences("mooddata", MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
+
         //creating toolbar
         Toolbar tool=findViewById(R.id.tool);
         setSupportActionBar(tool);
@@ -61,12 +62,8 @@ public class mood extends AppCompatActivity {
                 if(position==-1)
                     Toast.makeText(getApplicationContext(),"select a mood",Toast.LENGTH_SHORT).show();
                 else {
-
-                    //adding data to storage
-
                     int i = sp.getInt("temp", 0);
-
-
+                    //adding data to storage
                     editor.putInt("image" + i, data.get(position).img);
                     editor.putString("name" + i, data.get(position).emoji);
                     //for time
@@ -103,6 +100,7 @@ public class mood extends AppCompatActivity {
                 editor.apply();
             }
             else {
+
                 Intent historyintent = new Intent(getApplicationContext(), historylayout.class);
                 startActivity(historyintent);
             }
@@ -125,5 +123,21 @@ public class mood extends AppCompatActivity {
         // Inflate the menu items from the XML file
         getMenuInflater().inflate(R.menu.menumood,menu);
         return true;
+
+    }
+    public class clearall{
+        SharedPreferences sp = getSharedPreferences("mooddata", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int i=sp.getInt("temp",0)-1;
+        clearall() {
+            if (!sp.getString("date" + i, null).matches(day + ".*")) {
+
+                SharedPreferences.Editor editor = sp.edit();
+                editor.clear();
+                editor.apply();
+            }
+        }
     }
 }
