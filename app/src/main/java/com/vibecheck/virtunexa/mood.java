@@ -1,5 +1,6 @@
 package com.vibecheck.virtunexa;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,7 +30,6 @@ public class mood extends AppCompatActivity {
         super.onCreate(savedInstanceState); 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_mood);
-        clearall c=new clearall();
         SharedPreferences sp = getSharedPreferences("mooddata", MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
 
@@ -58,20 +58,29 @@ public class mood extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int i = sp.getInt("temp", 0);
+                Calendar calendar = Calendar.getInstance();
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                if(!sp.getString("date"+(i-1),"no").matches(day+".*") && i>=0)
+                {
+                    SharedPreferences.Editor editor=sp.edit();
+                    editor.clear();
+                    editor.apply();
+                    i=0;
+
+                }
                 int position=objemotions.getposition();
                 if(position==-1)
                     Toast.makeText(getApplicationContext(),"select a mood",Toast.LENGTH_SHORT).show();
                 else {
-                    int i = sp.getInt("temp", 0);
+
                     //adding data to storage
                     editor.putInt("image" + i, data.get(position).img);
                     editor.putString("name" + i, data.get(position).emoji);
                     //for time
                     SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-                    Calendar calendar = Calendar.getInstance();
                     int year = calendar.get(Calendar.YEAR);
                     int month = calendar.get(Calendar.MONTH) + 1; // Month is 0-based, so we add 1
-                    int day = calendar.get(Calendar.DAY_OF_MONTH);
                     editor.putString("date"+i,day+"/"+month+"/"+year);
                     Date currentTime = new Date();
                     String formattedTime = timeFormat.format(currentTime);
@@ -125,19 +134,5 @@ public class mood extends AppCompatActivity {
         return true;
 
     }
-    public class clearall{
-        SharedPreferences sp = getSharedPreferences("mooddata", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int i=sp.getInt("temp",0)-1;
-        clearall() {
-            if (!sp.getString("date" + i, null).matches(day + ".*")) {
 
-                SharedPreferences.Editor editor = sp.edit();
-                editor.clear();
-                editor.apply();
-            }
-        }
-    }
 }

@@ -73,7 +73,7 @@ public class historylayout extends AppCompatActivity {
                     index=j;
                 }
             }
-            data.add(new historygroup(sp.getInt("image"+i,0),sp.getString("name"+i,null),sp.getString("time"+i,"null"),sp.getString("date"+i,null)));
+            data.add(new historygroup(sp.getInt("image"+i,0),sp.getString("name"+i,null),sp.getString("time"+i,null),sp.getString("date"+i,null)));
             i--;
         }
         ImageView overalimg=findViewById(R.id.overallimg);
